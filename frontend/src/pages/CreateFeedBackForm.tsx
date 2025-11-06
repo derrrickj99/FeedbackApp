@@ -1,46 +1,17 @@
-import { Home, Plus, X } from "lucide-react";
-import { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router"
-import { FeedbackContext } from "../context/feedbackContext";
-import type { FeedbackForm, Question } from "../typings";
+import { Home, Plus, Send, X } from "lucide-react";
+import { NavLink } from "react-router"
+import useCreateform from "../hooks/useCreateForm";
+import type { FeedbackForm } from "../typings";
 
-const CreateFormView = () => {
+const CreateFeedbackForm = () => {
 
-  const navigate = useNavigate();
-  const { addFeedbackForm } = useContext(FeedbackContext);
-
-  const formId = "form_" + Date.now().toString();
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [formTitle, setFormTitle] = useState('');
-  const [newQuestion, setNewQuestion] = useState('');
-  const [questionType, setQuestionType] = useState<'rating' | 'text'>('rating');
-
-  function handleAddQuestionClick() {
-    if (newQuestion.trim()) {
-      const question: Question = {
-        id: "q_" + Date.now().toString(),
-        formId: formId,
-        text: newQuestion,
-        type: questionType
-      };
-      setQuestions((prev) => [...prev, question]);
-      setNewQuestion("");
-      setQuestionType("rating");
-    }
+  const form: FeedbackForm = {
+    title: "",
+    questions: [],
+    isActive: true,
   }
 
-  function handleCreateForm() {
-    if (formTitle && questions.length > 0) {
-      const newForm: FeedbackForm = {
-        _id: formId,
-        title: formTitle,
-        questions: questions,
-        createdAt: Date.now().toString()
-      }
-      addFeedbackForm!(newForm);
-      navigate("/");
-    }
-  }
+  const { questions, setQuestions, formTitle, setFormTitle, newQuestion, setNewQuestion, questionType, setQuestionType, loading, addQuestion, submitCreateForm } = useCreateform(form);
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -85,7 +56,7 @@ const CreateFormView = () => {
               <option value="text">Text Response</option>
             </select>
             <button
-              onClick={handleAddQuestionClick}
+              onClick={addQuestion}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
             >
               <Plus className="w-4 h-4" />
@@ -94,7 +65,7 @@ const CreateFormView = () => {
 
           <div className="space-y-3">
             {questions.map((question, index) => (
-              <div key={question.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div key={question._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center">
                   <span className="text-sm font-medium text-gray-500 mr-3">Q{index + 1}</span>
                   <span className="text-gray-800">{question.text}</span>
@@ -103,7 +74,7 @@ const CreateFormView = () => {
                   </span>
                 </div>
                 <button
-                  onClick={() => setQuestions(prev => prev.filter(q => q.id !== question.id))}
+                  onClick={() => setQuestions(prev => prev.filter(q => q._id !== question._id))}
                   className="p-1 hover:bg-red-100 rounded text-red-600"
                 >
                   <X className="w-4 h-4" />
@@ -115,11 +86,21 @@ const CreateFormView = () => {
 
         <div className="flex justify-end">
           <button
-            onClick={handleCreateForm}
-            disabled={!formTitle || questions.length === 0}
-            className="px-8 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold"
+            onClick={submitCreateForm}
+            disabled={!formTitle || questions.length === 0 || loading}
+            className="px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl hover:from-green-700 hover:to-emerald-700 disabled:from-gray-400 disabled:to-gray-400 disabled:cursor-not-allowed transition-all duration-200 font-bold text-lg flex items-center"
           >
-            Create Form
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Creating...
+              </>
+            ) : (
+              <>
+                <Send className="w-5 h-5 mr-2" />
+                Create Form
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -127,4 +108,4 @@ const CreateFormView = () => {
   );
 }
 
-export default CreateFormView;
+export default CreateFeedbackForm;
