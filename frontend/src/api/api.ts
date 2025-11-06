@@ -1,6 +1,8 @@
 import { getError } from "../utils/error";
 
-const API_BASE_URL = import.meta.env.API_URI || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URI;
+
+//console.log(API_BASE_URL);
 
 export const apiClient = {
 
