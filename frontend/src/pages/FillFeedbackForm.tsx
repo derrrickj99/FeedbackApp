@@ -16,7 +16,7 @@ const FillFeedbackForm = () => {
 
   const initResponses: FeedbackResponse[] = formQuestions.map(function (q) {
     const r: FeedbackResponse = {
-      questionId: q.id,
+      questionId: q._id,
       response: q.type === "rating" ? "0" : ""
     }
     return r;
@@ -61,33 +61,33 @@ const FillFeedbackForm = () => {
 
       <div className="space-y-8">
         {formQuestions.map((question, index) => (
-          <div key={question.id} className="border-b border-gray-100 pb-6 last:border-b-0">
+          <div key={question._id} className="border-b border-gray-100 pb-6 last:border-b-0">
             <label className="block text-lg font-medium text-gray-700 mb-4">
               {index + 1}. {question.text}
             </label>
 
             {question.type === 'rating' ? (
               <StarRating
-                rating={responses.find((r) => r.questionId === question.id)?.response as number}
+                rating={responses.find((r) => r.questionId === question._id)?.response as number}
                 onRatingChange={(rating) => setResponses(prev => {
                   const newRes: FeedbackResponse = {
-                    questionId: question.id,
+                    questionId: question._id,
                     response: rating,
                   }
 
-                  return [...prev.filter((p) => p.questionId !== question.id), newRes];
+                  return [...prev.filter((p) => p.questionId !== question._id), newRes];
                 })}
               />
             ) : (
               <textarea
-                value={responses.find((r) => r.questionId == question.id)?.response}
+                value={responses.find((r) => r.questionId == question._id)?.response}
                 onChange={(e) => setResponses(prev => {
                   const newRes: FeedbackResponse = {
-                    questionId: question.id,
+                    questionId: question._id,
                     response: e.target.value,
                   }
 
-                  return [...prev.filter((p) => p.questionId !== question.id), newRes];
+                  return [...prev.filter((p) => p.questionId !== question._id), newRes];
                 })}
                 placeholder="Type your response here..."
                 className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
