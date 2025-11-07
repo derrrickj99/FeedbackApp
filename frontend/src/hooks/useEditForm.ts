@@ -35,7 +35,6 @@ const useEditform = (formId: string) => {
 
             feedback.get(formId, accessToken).then(({ title, questions }) => {
                 setFormTitle(title);
-                console.log(questions);
                 setQuestions(() => [...questions]);
             }).catch(error => {
                 console.log(error);

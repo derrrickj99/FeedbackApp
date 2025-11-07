@@ -50,7 +50,7 @@ export const feedback = {
 
   create: async (formData: CreateFormRequest, accessToken: string) => {
     try {
-      const response = await apiClient.post("/form", accessToken, {
+      const response = await apiClient.post("/forms", accessToken, {
         body: JSON.stringify(formData)
       })
 
