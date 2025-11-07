@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useEffectEvent } from "react";
 import { useFeedbackAPI } from "./useFeedbackApi"
 import { feedback } from "../api/feedbackAPI";
 import type { FeedbackForm } from "../typings";
@@ -12,6 +12,7 @@ const useListFeedbackForms = () => {
     const [feedbackForms, setFeedbackForms] = useState<FeedbackForm[]>([]);
     const { loading } = useFeedbackAPI();
     const { showBoundary } = useErrorBoundary();
+    const showBoundaryEvent = useEffectEvent((error: unknown) => showBoundary(error));
     useEffect(() => {
         if (!accessToken) {
             throw new CustomError("Authentication Error", "Access Token not found");
@@ -21,14 +22,15 @@ const useListFeedbackForms = () => {
             feedback.getForms(1, 10, true, accessToken).then((data) => {
                 setFeedbackForms([...data]);
             }).catch(err => {
-                showBoundary(err);
+                showBoundaryEvent(err);
             })
 
         }
         fetchForms();
 
 
-    }, [accessToken, showBoundary]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [accessToken]);
 
     return { feedbackForms, loading };
 }

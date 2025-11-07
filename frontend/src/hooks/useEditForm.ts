@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import type { Question } from "../typings";
 import { useNavigate } from "react-router";
 import { useFeedbackAPI } from "./useFeedbackApi";
@@ -9,6 +9,7 @@ import { useErrorBoundary } from "react-error-boundary";
 
 const useEditform = (formId: string) => {
 
+    const showBoundaryEvent = useEffectEvent((error: Error) => showBoundary(error));
     const navigate = useNavigate();
     const { accessToken } = useAuth();
     const { loading } = useFeedbackAPI()
@@ -38,13 +39,13 @@ const useEditform = (formId: string) => {
                 setQuestions(() => [...questions]);
             }).catch(error => {
                 console.log(error);
-                showBoundary(error);
+                showBoundaryEvent(error);
             });
         }
 
         fetchForm(formId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [accessToken, formId])
 
     function addQuestion() {
         if (newQuestion.trim()) {
