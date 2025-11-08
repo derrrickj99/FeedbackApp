@@ -15,7 +15,7 @@ export const feedback = {
         params.append('active', active.toString());
       }
 
-      const response = await apiClient.get(`/forms`, accessToken);
+      const response = await apiClient.get(`/forms?${params}`, accessToken);
 
       const body = await response.json() as IApiResponse<FeedbackForm[]>;
 
