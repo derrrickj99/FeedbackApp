@@ -1,6 +1,7 @@
 import React from 'react';
 import { LogOut } from 'lucide-react';
 import useAuth from '../hooks/useAuth';
+import { Link } from 'react-router';
 
 const Navbar: React.FC = () => {
     const { logout } = useAuth();
@@ -14,13 +15,15 @@ const Navbar: React.FC = () => {
     };
 
     return (
-        <nav className="bg-white border-b border-gray-200 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="bg-transparent">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <div className="text-2xl font-bold text-gray-800">
-                        Feedback App
-                    </div>
+                    <Link to={{ pathname: '/' }}>
+                        <div className="text-2xl font-bold text-gray-800">
+                            Feedback Hub
+                        </div>
+                    </Link>
 
                     {/* Logout Button */}
                     <button
